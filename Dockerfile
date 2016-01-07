@@ -23,7 +23,7 @@ RUN apt-get update && \
     apt-get clean && \
     ln -s /usr/bin/libtoolize /usr/bin/libtool # See https://github.com/zeromq/libzmq/issues/1385
 
-RUN pip3 install "ipython[notebook]"
+RUN pip3 install jupyter
 
 RUN gem install --no-rdoc --no-ri sciruby-full && iruby register
 
@@ -33,7 +33,7 @@ WORKDIR /notebooks
 EXPOSE 8888
 
 # Convert notebooks to the current format
-RUN find . -name '*.ipynb' -exec ipython nbconvert --to notebook {} --output {} \;
-RUN find . -name '*.ipynb' -exec ipython trust {} \;
+#RUN find . -name '*.ipynb' -exec ipython nbconvert --to notebook {} --output {} \;
+#RUN find . -name '*.ipynb' -exec ipython trust {} \;
 
-CMD ipython notebook
+CMD jupyter notebook --no-browser --ip='*' --port 8888
