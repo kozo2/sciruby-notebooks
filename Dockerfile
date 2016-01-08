@@ -25,7 +25,7 @@ RUN apt-get update && \
 
 RUN pip3 install jupyter
 
-RUN gem install --no-rdoc --no-ri ai4r algorithms awesome_print bibsync bibtex-ruby bio cassowary classifier-reborn cmath ctioga2 daru darwinning decisiontree distribution extendmatrix gga4r gimuby gnuplot gnuplotrb gphys gruff gsl hamster histogram integration irtruby iruby && iruby register
+RUN gem install --no-rdoc --no-ri ai4r algorithms awesome_print bibsync bibtex-ruby bio classifier-reborn ctioga2 daru darwinning decisiontree distribution extendmatrix gga4r gimuby gnuplot gnuplotrb gsl hamster histogram integration iruby && iruby register
 
 ADD . /notebooks
 WORKDIR /notebooks
