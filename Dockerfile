@@ -25,15 +25,23 @@ RUN apt-get update && \
 
 RUN pip3 install jupyter
 
-RUN gem install --no-rdoc --no-ri ai4r algorithms awesome_print bibsync bibtex-ruby bio classifier-reborn ctioga2 daru darwinning decisiontree distribution extendmatrix gga4r gimuby gnuplot gnuplotrb gsl hamster histogram integration iruby && iruby register
+RUN gem update --no-document --system && \
+    gem install --no-document sciruby-full && \
+    iruby register
 
 ADD . /notebooks
 WORKDIR /notebooks
 
-EXPOSE 8888
-
 # Convert notebooks to the current format
-#RUN find . -name '*.ipynb' -exec ipython nbconvert --to notebook {} --output {} \;
-#RUN find . -name '*.ipynb' -exec ipython trust {} \;
+RUN find . -name '*.ipynb' -exec jupyter nbconvert --to notebook {} --output {} \;
+RUN find . -name '*.ipynb' -exec jupyter trust {} \;
 
-CMD jupyter notebook --no-browser --ip='*' --port 8888
+# Add Tini. Tini operates as a process subreaper for jupyter. This prevents
+# kernel crashes.
+ENV TINI_VERSION v0.6.0
+ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /usr/bin/tini
+RUN chmod +x /usr/bin/tini
+ENTRYPOINT ["/usr/bin/tini", "--"]
+
+EXPOSE 8888
+CMD ["jupyter", "notebook", "--port=8888", "--no-browser", "--ip=0.0.0.0"]
